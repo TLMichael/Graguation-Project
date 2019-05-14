@@ -1,0 +1,40 @@
+\documentclass[
+  lang=cn,
+  degree=bachelor,type=paper,
+  openany,oneside
+  % openright,blankleft,twoside
+]{nuaathesis}
+
+\graphicspath{{./fig/},{./logo/},{../logo/}}
+
+\input{global.tex}
+% \includeonly{content/start,}
+
+\begin{document}
+
+\makecover
+\makedeclare
+\frontmatter
+\makeabstract
+% 如果需要调整目录层级数量的话，取消下一行注释，数字含义: 0=chapter, 1=section, 2=subsection
+% \setcounter{tocdepth}{1}
+\nuaatableofcontents
+
+\mainmatter
+
+\include{content/introduction}
+\include{content/research}
+\include{content/adversarial}
+\include{content/regularization}
+\include{content/experiment}
+\include{content/conclusion}
+
+
+\backmatter
+% 如果参考文献使用 biber
+\bibliographystyle{nuaabib}   % 参考文献的样式
+\bibliography{bib/sample}   % 参考文献，即 bib/sample.bib 文件（纯文本）
+
+\include{content/acknowledge}
+
+\end{document}

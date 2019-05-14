@@ -1,0 +1,210 @@
+\chapter{实验与分析}
+
+本章对第四章介绍的四个正则化方法进行评估，它们分别是ALP、MMD、CORAL、AMR。我们将在四个数据集上对它们进行测试，并采用三种攻击方法和一种攻击无关的鲁棒性指标进行有效性验证。我们将对AMR方法中的k进行取值分析。另外，ALP由于已经被人发现在ImageNet上可以通过增加PGD攻击的迭代次数使得鲁棒精度降为0.6\%\cite{engstrom2018evaluating}，但我们认为这只是在一个数据集上的结果，并不一定在别的数据集上成立，因此我们对ALP方法进行了PGD攻击的收敛性分析；同理，AMR方法可能会存在和ALP同样的问题，且AMR方法是我们提出来的，没有被测试过，故我们对AMR方法也进行PGD攻击的收敛性分析。
+
+\section{实验设置}
+
+我们在四个流行的数据集上进行测试，分别是MNIST\cite{lecun1998mnist}、SVHN\cite{netzer2011reading}、CIFAR10和CIFAR100\cite{krizhevsky2009learning}，它们的详细信息如下：
+\begin{description}
+    \item[MNIST] 是对黑白图像中阿拉伯数字进行识别的数据集，来自美国国家标准与技术研究所。训练集 (training set) 由来自 250 个不同人手写的数字构成，其中 50\% 是高中学生，50\% 来自人口普查局的工作人员。测试集也是同样比例的手写数字数据。每张图片大小为$28\times28\times1$像素，测试集包含50000个图片，我们将其中5000分出来作为验证集，测试集包含10000个图片。
+    \item[SVHN] 是对彩色图像中阿拉伯数字进行识别的数据集，该数据集中的图像来自真实世界的门牌号数字，图像来自Google街景中所拍摄的门牌号图片，每张图片中包含一组 '0-9' 的阿拉伯数字。每张图片大小为$32\times32\times3$像素，训练集中包含 73257 个图片，测试集中包含 26032 个图片，另有 531131 个附加图片。在我们的实验中，将训练集的73257个图片分成了53257 + 20000，前者为训练集，后者为验证集，不使用附加数字。
+    \item[CIFAR10] 是八十万小图片数据集（80 million tiny images dataset）的子集。由10个类的60000个$32\times32\times3$的彩色图像组成，每个类有6000个图像。总共有50000个训练图像和10000个测试图像，我们将训练图像中的5000分出来作为验证集。
+    \item[CIFAR100] 也是八十万小图片数据集（80 million tiny images dataset）的子集。它有100个类，每个类包含600个$32\times32\times3$的彩色图像。每类各有500个训练图像和100个测试图像。总共有50000个训练图像和10000个测试图像，我们将训练图像中的5000分出来作为验证集。
+\end{description} 
+
+对于所有的实验，我们将图片的像素值归一化到[0, 1]之间。除了四个正则化方法间的对比，我们还与普通的非对抗训练（Normal Training, NT）和普通的对抗训练（Adversarial Training, AT）进行对比。为了公平起见，我们将所有正则化方法的超参数$\lambda$设置为0.1。AMR方法中特征提取器$\varPhi(\cdot)$采用的是自然训练的分类器，温度参数$t$的设置是从1、10和100三个数字中选取效果最好的，k是[1, 10]之间选择的。所有的实验都是在一个Titan X GPU上进行的。
+在我们的实验中，采用的都是$\ell_{\infty}$范数，PGD攻击的迭代次数$k=50$，步长$\alpha=\epsilon/10$，CW攻击的常数$c=0.001$，迭代次数$k=10$。用于训练MNIST的模型是一个五层的全连接网络，隐层结点个数依次为256、256、64和10，用于训练SVHN、CIFAR10和CIFAR100的模型都是VGG16\cite{simonyan2014very}。我们调整模型使得它们有效，并没有把重心放在最优化这些设置上。
+
+\section{泛化能力分析} \label{section:generalization}
+
+我们在四个数据集上评估模型的鲁棒泛化能力，并进行比较分析。
+
+\begin{table}[h]
+    \renewcommand\arraystretch{0.6}
+    \renewcommand\heavyrulewidth{0.1em}
+    \renewcommand\lightrulewidth{0.05em}
+    
+    \caption{不同方法在测试集上的鲁棒精度} 
+    \label{table-generalization}
+    \centering
+
+    \subfloat[在MNIST上的实验，扰动的幅度为0.1。]{\label{table-generalization-mnist}
+        \begin{minipage}[b]{10cm}
+            \centering
+            \begin{tabular}{lcccc}
+            \toprule
+            Method & \multicolumn{1}{l}{Clean (\%)} & \multicolumn{1}{l}{FGSM(\%)} & \multicolumn{1}{l}{PGD(\%)} & \multicolumn{1}{l}{CW(\%)} \\ \midrule
+            NT     & 98.37                          & 29.67                        & 13.38                       & 47.47                      \\
+            AT     & 98.95                          & 94.16                        & 91.95                       & 94.77                      \\
+            ALP    & \textbf{99.05}                 & 94.89                        & 91.65                       & 95.08                      \\
+            MMD    & 98.96                          & 94.52                        & \textbf{92.58}              & \textbf{95.28}             \\
+            CORAL  & 98.93                          & \textbf{95.08}               & 89.75                       & 94.49                      \\
+            AMR    & 99.03                          & 94.96                        & 90.24                       & 94.65                      \\ \bottomrule
+            \end{tabular}
+        \end{minipage}
+    }
+
+    \subfloat[在SVHN上的实验，扰动的幅度为0.02。]{\label{table-generalization-svhn}
+        \begin{minipage}[b]{10cm}
+            \centering
+            \begin{tabular}{lcccc}
+            \toprule
+            Method & \multicolumn{1}{l}{Clean (\%)} & \multicolumn{1}{l}{FGSM(\%)} & \multicolumn{1}{l}{PGD(\%)} & \multicolumn{1}{l}{CW(\%)} \\ \midrule
+            NT     & 94.36                          & 27.86                        & 2.95                        & 2.77                       \\
+            AT     & 93.66                          & 93.87                        & 10.18                       & 39.19                      \\
+            ALP    & 93.63                          & 92.49                        & \textbf{42.31}              & \textbf{62.76}             \\
+            MMD    & 94.00                          & 92.88                        & 20.78                       & 45.18                      \\
+            CORAL  & \textbf{94.66}                 & \textbf{94.01}               & 39.96                       & 57.84                      \\
+            AMR    & 93.90                          & 92.11                        & 40.53                       & 54.76                      \\ \bottomrule
+            \end{tabular}
+        \end{minipage}
+    }
+
+    \subfloat[在CIFAR10上的实验，扰动的幅度为4/255。]{\label{table-generalization-cifar10}
+        \begin{minipage}[b]{10cm}
+            \centering
+            \begin{tabular}{lcccc}
+            \toprule
+            Method & \multicolumn{1}{l}{Clean (\%)} & \multicolumn{1}{l}{FGSM(\%)} & \multicolumn{1}{l}{PGD(\%)} & \multicolumn{1}{l}{CW(\%)} \\ \midrule
+            NT     & \textbf{87.19}                 & 16.65                        & 1.14                        & 1.03                       \\
+            AT     & 82.65                          & 56.26                        & 52.59                       & 52.68                      \\
+            ALP    & 78.85                          & 57.95                        & 55.40                       & 54.64                      \\
+            MMD    & 82.51                          & 56.70                        & 53.51                       & 53.32                      \\
+            CORAL  & 80.26                          & \textbf{60.75}               & \textbf{58.45}              & \textbf{57.36}             \\
+            AMR    & 78.55                          & 58.15                        & 55.78                       & 54.69                      \\ \bottomrule
+            \end{tabular}
+        \end{minipage}
+    }
+
+    \subfloat[在CIFAR100上的实验，扰动的幅度为4/255。]{\label{table-generalization-cifar100}
+        \begin{minipage}[b]{10cm}
+            \centering
+            \begin{tabular}{lcccc}
+            \toprule
+            Method & \multicolumn{1}{l}{Clean (\%)} & \multicolumn{1}{l}{FGSM(\%)} & \multicolumn{1}{l}{PGD(\%)} & \multicolumn{1}{l}{CW(\%)} \\ \midrule
+            NT     & \textbf{62.55}                 & 11.92                        & 1.20                        & 1.25                       \\
+            AT     & 56.13                          & 28.16                        & 25.50                       & 25.31                      \\
+            ALP    & 51.47                          & 30.61                        & 28.74                       & 27.14                      \\
+            MMD    & 55.90                          & 27.83                        & 24.99                       & 24.89                      \\
+            CORAL  & 53.92                          & \textbf{32.10}               & \textbf{30.19}              & \textbf{28.13}             \\
+            AMR    & 51.00                          & 31.50                        & 29.90                       & 27.96                      \\ \bottomrule
+            \end{tabular}
+        \end{minipage}
+    }
+\end{table}
+
+\textbf{在MNIST上的实验。}标准泛化能力和鲁棒泛化能力见表\ref{table-generalization-mnist}。在干净的样本上，ALP表现得最好，AMR次之。在对抗样本上，NT的鲁棒泛化能力非常差，CORAL在FGSM攻击下的鲁棒精度上表现最好，而MMD在PGD和CW攻击下的鲁棒精度上表现得最好。在这个数据集上，表现得最好的是CORAL，表现得最差的是NT和AT，AMR总体上表现得比ALP和MMD差。
+
+\textbf{在SVHN上的实验。}标准泛化能力和鲁棒泛化能力见表\ref{table-generalization-svhn}。在干净样本上，CORAL表现得最好，NT次之。在对抗样本上，NT的鲁棒泛化能力非常差，CORAL在FGSM攻击下的鲁棒精度上表现最好，而ALP在PGD和CW攻击下的鲁棒精度上表现得最好。在这个数据集上，表现得最好的是CORAL，最差的是NT和AT，AMR总体上比ALP差，但是比MMD要好。
+
+\textbf{在CIFAR10上的实验。}标准泛化能力和鲁棒泛化能力见表\ref{table-generalization-cifar10}。在干净的样本上，NT表现得最好，AT次之，然而NT和AT的鲁棒泛化能力都不及其它方法。在对抗样本上，在三种方法的攻击下，CORAL均表现出了最好的泛化能力。在这个数据集上，表现得最好的是CORAL，最差的是NT和AT，总体上AMR比ALP和MMD都要好。
+
+\clearpage
+
+\textbf{在CIFAR100上的实验。}标准泛化能力和鲁棒泛化能力见表\ref{table-generalization-cifar100}。在干净样本上，NT表现得最好，AT次之，然而NT和AT的鲁棒泛化能力都不及其它方法。在对抗样本上，在三种方法的攻击下，CORAL均表现出了最好的泛化能力。在这个数据集上，表现得最好的是CORAL，最差的是NT和AT，总体上AMR比ALP和MMD都要好。
+
+总的来说，CORAL都是效果最好的方法，NT都是效果最差的方法。AT这种不加额外正则化项的方法基本上都比其它四种加了正则化的对抗训练方法要差，这证明了四种正则化方法的有效性。另外，注意到AMR方法的优劣与数据集相关，在MNIST和SVHN上，AMR方法效果没有ALP好；而在CIFAR10和CIFAR100上，AMR方法比ALP和MMD都要好。MNIST和SVHN都是十个阿拉伯数字，模式相对简单；CIFAR10和CIFAR100都是自然彩色图像，模式相对复杂，分类任务难度更大，此时体现出了AMR相对于ALP和MMD的优势。
+
+\section{损失敏感度分析}
+
+局部损失敏感度（The local loss sensitivity）是量化模型对扰动的光滑性和泛化性的一种方法。它可以被下式计算。它的值越小，表示损失函数越光滑。
+\begin{equation}
+    \mathcal{S}=\frac{1}{m} \sum_{i=1}^{m}\left\|\nabla_{x} J\left(x_{i}, y_{i}\right)\right\|_{2}
+\end{equation}
+前文中已训练的模型的局部损失敏感度计算结果在表\ref{table-loss_sensitivity}中。结果显示，与自然训练相比，对抗训练的方法的确增加了模型的光滑度。且大部分加了正则化方法的对抗训练得到了比单纯对抗训练更好的结果，但不同的正则化方法在不同的数据集上各有优劣。ALP方法在SVHN上表现最好，MMD方法在MNIST上表现最好，CORAL方法在CIFAR10上表现最好，AMR方法在CIFAR100上表现最好。
+
+\begin{table}[h]
+    \renewcommand\arraystretch{0.6}
+    \renewcommand\heavyrulewidth{0.1em}
+    \renewcommand\lightrulewidth{0.05em}
+    
+    \caption{正则化方法的损失敏感度分析} 
+    \label{table-loss_sensitivity}
+    \centering
+
+    \begin{tabular}{lccccll}
+    \toprule
+    Dataset            & NT   & AT   & ALP           & MMD           & CORAL         & AMR           \\ \midrule
+    MNIST ($10^{-4}$)    & 3.38 & 1.16 & 1.76          & \textbf{1.15} & 3.05          & 1.93          \\
+    SVHN ($10^{-3}$)     & 3.22 & 3.92 & \textbf{2.70} & 4.23          & 3.14          & 3.58          \\
+    CIFAR10 ($10^{-3}$)  & 6.72 & 1.75 & 1.45          & 1.74          & \textbf{1.29} & 1.36          \\
+    CIFAR100 ($10^{-3}$) & 11.1 & 2.42 & 1.48          & 2.41          & 1.45          & \textbf{1.30} \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+\clearpage
+
+\section{对抗流形正则化的k近邻分析}
+
+AMR方法中，希望在原空间中非常接近的干净样本和对抗样本，在隐空间中也尽量靠近。这里我们选取的是在原空间中最接近的k个样本，拉近当前样本和这k个样本间的距离，所以k的取值决定了数据流形结构的稀疏程度，对最终结果会有所影响。由于显存限制，k的取值不能过大，我们的实验将k在2 $\sim$ 10的取值范围内进行分析。
+
+在四个数据集上k的取值结果如图\ref{fig-knn-mnist}、图\ref{fig-knn-svhn}、图\ref{fig-knn-cifar10}和图\ref{fig-knn-cifar100}所示。可以看出，在四个数据集上，k的取值对模型的标准泛化能力和FGSM的鲁棒泛化能力影响都不大，但是在MNIST和SVHN上，PGD的鲁棒泛化能力有所起伏，分别在k为7和5的时候取到了最好的效果。而在CIFAR10和CIFAR100上，PGD的鲁棒泛化能力呈现了微弱的下降趋势，分别在k为2和3的时候得到了最好的效果。
+
+
+\section{PGD攻击的收敛性分析} \label{section:convergence}
+
+ALP由于已经被人发现在ImageNet上可以通过增加PGD攻击的迭代次数使得鲁棒精度从宣称的27.9\%降为0.6\%\cite{engstrom2018evaluating}，但我们认为这只是在ImageNet上的结果，并不一定在本文的四个小型数据集上成立，因此我们对ALP方法进行了PGD攻击的收敛性分析；同理，AMR方法可能会存在和ALP同样的问题，且AMR方法是我们提出来的，没有被测试过，故我们对AMR方法也进行PGD攻击的收敛性分析。
+
+实验结果如图\ref{fig-pgd-mnist}、图\ref{fig-pgd-svhn}、图\ref{fig-pgd-cifar10}和图\ref{fig-pgd-cifar100}所示。可以看到，ALP方法和AMR方法在四个数据集上均收敛到较高的一个正确率，并不像在ImageNet上那样精度降低至几乎为零。其中在MNIST、CIFAR10和CIFAR100数据集上，PGD攻击的迭代次数大约在50次时便收敛；在SVHN数据集上，PGD攻击的迭代次数在100次左右才收敛。可以看出，在MNIST和SVHN上，ALP方法的正确率总是要高于AMR方法；而在CIFAR10和CIFAR100上，AMR方法总是优于ALP方法。
+
+\clearpage
+
+\begin{figure}[t]
+    \centering
+    \input{fig/plot_knn_mnist}
+    \caption{MNIST的k近邻取值分析}
+    \label{fig-knn-mnist}
+\end{figure}
+
+\begin{figure}[b]
+    \centering
+    \input{fig/plot_knn_svhn}
+    \caption{SVHN的k近邻取值分析}
+    \label{fig-knn-svhn}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \input{fig/plot_knn_cifar10}
+    \caption{CIFAR10的k近邻取值分析}
+    \label{fig-knn-cifar10}
+\end{figure}
+
+\begin{figure}[b]
+    \centering
+    \input{fig/plot_knn_cifar100}
+    \caption{CIFAR100的k近邻取值分析}
+    \label{fig-knn-cifar100}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[t]
+    \centering
+    \input{fig/plot_pgd_mnist}
+    \caption{MNIST上PGD攻击的收敛性分析}
+    \label{fig-pgd-mnist}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \input{fig/plot_pgd_svhn}
+    \caption{SVHN上PGD攻击的收敛性分析}
+    \label{fig-pgd-svhn}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \input{fig/plot_pgd_cifar10}
+    \caption{CIFAR10上PGD攻击的收敛性分析}
+    \label{fig-pgd-cifar10}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \input{fig/plot_pgd_cifar100}
+    \caption{CIFAR100上PGD攻击的收敛性分析}
+    \label{fig-pgd-cifar100}
+\end{figure}
+
+\clearpage

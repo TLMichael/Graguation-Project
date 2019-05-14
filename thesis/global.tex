@@ -1,0 +1,141 @@
+\iffalse
+  % 本块代码被上方的 iffalse 注释掉，如需使用，请改为 iftrue
+  % 使用 Noto 字体替换中文宋体、黑体
+  \setCJKfamilyfont{\CJKrmdefault}[BoldFont=Noto Serif CJK SC Bold]{Noto Serif CJK SC}
+  \renewcommand\songti{\CJKfamily{\CJKrmdefault}}
+  \setCJKfamilyfont{\CJKsfdefault}[BoldFont=Noto Sans CJK SC Bold]{Noto Sans CJK SC Medium}
+  \renewcommand\heiti{\CJKfamily{\CJKsfdefault}}
+\fi
+
+\iffalse
+  % 本块代码被上方的 iffalse 注释掉，如需使用，请改为 iftrue
+  % 在 XeLaTeX + ctexbook 环境下使用 Noto 日文字体
+  \setCJKfamilyfont{mc}[BoldFont=Noto Serif CJK JP Bold]{Noto Serif CJK JP}
+  \newcommand\mcfamily{\CJKfamily{mc}}
+  \setCJKfamilyfont{gt}[BoldFont=Noto Sans CJK JP Bold]{Noto Sans CJK JP}
+  \newcommand\gtfamily{\CJKfamily{gt}}
+\fi
+
+\iftrue
+  % 使用微软字体替换中文宋体、黑体、楷体
+  \setCJKfamilyfont{\CJKrmdefault}[AutoFakeBold]{SimSun}
+  \renewcommand\songti{\CJKfamily{\CJKrmdefault}}
+  \setCJKfamilyfont{\CJKsfdefault}[AutoFakeBold]{SimHei}
+  \renewcommand\heiti{\CJKfamily{\CJKsfdefault}}
+  \setCJKfamilyfont{kai}[AutoFakeBold]{KaiTi}
+  \renewcommand\kaishu{\CJKfamily{kai}}
+
+\fi
+
+% 设置基本文档信息，\linebreak 前面不要有空格，否则在无需换行的场合，中文之间的空格无法消除
+\nuaaset{
+  title = {结合度量学习的鲁棒神经网络研究和实现},
+  author = {陶略},
+  college = {计算机科学与技术学院},
+  advisers = {陈松灿},
+  % applydate = {二〇一八年六月}  % 默认当前日期
+  %
+  % 本科
+  major = {计算机科学与技术},
+  studentid = {031510319},
+  classid = {1615102},
+  % 硕/博士
+  majorsubject = {\LaTeX},
+  researchfield = {\LaTeX 排版},
+  libraryclassid = {TP371},       % 中图分类号
+  subjectclassid = {080605},      % 学科分类号
+  thesisid = {1028704 18-S000},   % 论文编号
+}
+\nuaasetEn{
+  title = {Research and Implementation of Robust Neural Network Based on Metric Learning},
+  author = {Lue Tao},
+  college = {College of Computer Science and Technology},
+  majorsubject = {\LaTeX{} Typesetting},
+  advisers = {Songcan Chen, tex.se users},
+  % degreefull = {Master of Art and Engineering},
+  % applydate = {June, 8012}
+}
+
+% 摘要
+\begin{abstract}
+
+由于在自然图像、自然语言等数据中普遍存在的层次性和非线性性，深度神经网络在诸多现实任务上都取得了巨大的进展。从已经被大规模部署的人脸识别系统，到正在发展阶段的自动驾驶汽车，深度学习技术正在走进并改变着人类生活的方方面面。虽然深度学习在通常情况下都具有较好的泛化性能，但近年来，神经网络被发现在对抗样本的攻击下，表现出了非常糟糕的性能，而这些对抗样本对人类来说与正常样本无异。这引发了人们对基于深度网络的智能系统的安全性的担忧，同时也揭示了目前深度网络对这个世界的理解能力远远不及人类智能的事实。对抗训练，作为一个有效的提高神经网络鲁棒性的方法被广泛使用，但它的泛化性能却一直不尽人意。本文所研究的，就是尝试结合度量学习的思想，利用相关的正则化方法，以提高对抗训练的泛化性能，并通过大量的实验进行有效性验证。
+
+\end{abstract}
+\keywords{深度学习, 对抗样本, 度量学习, 正则化}
+
+\begin{abstractEn}
+
+Because of the hierarchy and non-linearity in the natural image and natural language data, deep learning has made great progress in many practical tasks. From the face recognition system that has been deployed on a large scale, to the self-driving car in the developing stage, deep learning is stepping into and changing all aspects of human life. Although deep learning usually has good generalization performance in most cases, in recent years, neural networks have been found to exhibit very poor performance against adversarial examples, which are nearly indistinguishable from the clean examples. These raises concerns about the security of intelligent systems based on deep networks, and also reveal the fact that deep networks are far less capable of understanding the world than human intelligence. Adversarial training is widely used as an effective way to improve the robustness of neural networks, but its generalization performance is unsatisfactory. The purpose of this paper is to try to improve the generalization performance of adversarial training by combining the idea of metric learning and using relevant regularization methods. We verify the effectiveness of regularization by extensive experiments.
+
+\end{abstractEn}
+\keywordsEn{Deep learning, Adversarial example, Metric learning, Regularization}
+
+
+% 请按自己的论文排版需求，随意修改以下全局设置
+
+\usepackage{subfig}
+\usepackage{rotating}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\pgfplotsset{
+  table/search path={./fig/},
+}
+\usepackage{ifthen}
+\usepackage{longtable}
+\usepackage{siunitx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage[bottom]{footmisc}
+\usepackage{pifont}
+\usepackage{booktabs}   % For thickness of table line
+\usepackage{hyperref}   % For cross-reference with custon text
+
+\lstdefinestyle{lstStyleBase}{%
+  basicstyle=\small\ttfamily,
+  aboveskip=\medskipamount,
+  belowskip=\medskipamount,
+  lineskip=0pt,
+  boxpos=c,
+  showlines=false,
+  extendedchars=true,
+  upquote=true,
+  tabsize=2,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\footnotesize,
+  linewidth=\linewidth,
+  xleftmargin=\parindent,
+  xrightmargin=0pt,
+  resetmargins=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  breakindent=0pt,
+  breakautoindent=true,
+  columns=flexible,
+  keepspaces=true,
+  framesep=3pt,
+  rulesep=2pt,
+  framerule=1pt,
+  backgroundcolor=\color{gray!5},
+  stringstyle=\color{green!40!black!100},
+  keywordstyle=\bfseries\color{blue!50!black},
+  commentstyle=\slshape\color{black!60}}
+
+%\usetikzlibrary{external}
+%\tikzexternalize % activate!
+
+\newcommand\cs[1]{\texttt{\textbackslash#1}}
+\newcommand\pkg[1]{\texttt{#1}\textsuperscript{PKG}}
+\newcommand\env[1]{\texttt{#1}}
+
+\theoremstyle{nuaaplain}
+\nuaatheoremchapu{definition}{定义}
+\nuaatheoremchapu{assumption}{假设}
+\nuaatheoremchap{exercise}{练习}
+\nuaatheoremchap{nonsense}{胡诌}
+\nuaatheoremg[句]{lines}{句子}

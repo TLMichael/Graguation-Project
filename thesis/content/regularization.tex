@@ -1,0 +1,105 @@
+\chapter{对抗训练中的正则化方法}
+
+深度学习中对抗样本的存在性是一个反直觉的特性，一个被普遍接受的解释是：对抗样本是模型的内在的盲点区域，这个盲区的结构与数据分布紧密相关，以一种不那么明显的方式\cite{szegedy2013intriguing}。
+
+这种不明显体现在，对抗样本和干净样本在我们人类看来区别并没有那么地明显，甚至不可察觉，但事实上，对于模型来说，这种不明显的区别是致命的。
+
+这种致命体现在，两个在原始特征空间中非常邻近的样本点，经过深度网络一系列非线性变换后，两个样本点在隐空间中的距离竟然会变得很远，以至于最终落在了模型的两个不同的判决区域。
+
+一个直觉的方案是在隐空间中尽量拉近对抗样本与干净样本的距离，期望使得模型不再将两个样本点（对抗样本和原始样本）判为不同类别。这个思想就是度量学习中的对比损失，学习一个良好的深度网络，使得在隐空间中对抗样本和干净样本之间的距离尽量小。
+
+对比损失可以形式化为：
+\begin{equation}
+    L
+    = 
+    \frac{1}{(|\mathcal{D}| + |\mathcal{A}|)^2} \sum_{x_i, x_j \in \mathcal{D} \cup \mathcal{A}} w_{ij}\big\|\varphi(x_i) - \varphi(x_j)\big\|_2^2
+    \ ,
+    \label{contrastive_loss}
+\end{equation}
+其中$w_{ij}$定义为：
+\begin{equation}
+    w_{ij} = \left\{
+    \begin{array}{rl}
+    1  & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{sim} \ ,\\
+    -1 & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{dis} \ ,\\
+    0  & \quad otherwise \ .
+    \end{array} \right.
+    \label{metric_weight}
+\end{equation}
+其中$\mathcal{P}_{sim}$表示相似样本对集合，$\mathcal{P}_{dis}$表示不相似样本对集合。这里的式\eqref{contrastive_loss}在度量学习中只是一个最基本的形式，本文这样写是为了阐明本文思路，对比损失的其它变体形式在这里不予赘述。
+
+为了将对比损失的思想作为一个正则化项，合适地融入对抗训练的损失中，下面介绍三种构造方式：对抗逻辑配对（Adversarial Logit Pairing, ALP）\cite{kannan2018adversarial}、结合域适应的对抗训练（Adversarial Training with Domain Adaption, ATDA）\cite{song2018improving}、对抗流形正则化（Adversarial Manifold Regularization, AMR）。
+
+\section{ALP} \label{section:alp}
+
+ALP可以定义为：
+\begin{equation}
+    L_{alp}
+    = 
+    \frac{1}{|\mathcal{D}|} \sum_{x_i \in \mathcal{D}} \big\|\varphi(x_i) - \varphi(x_i^{adv})\big\|_2^2 \ ,
+    \label{alp}
+\end{equation}
+其中$x_i^{adv}$是$x_i$对应的使用FGSM攻击方法生成的对抗样本。式\eqref{alp}旨在缩小每个样本点和它对应的对抗样本点间的欧式距离，即在式\eqref{metric_weight}中，$\mathcal{P}_{sim} = \{(x_i, x_i^{adv}) | x_i \in \mathcal{D} \}$，$\mathcal{P}_{dis} = \varnothing$。
+
+Kannan等人在提出ALP的文章中，他们仅仅在ImageNet上进行了有效性验证，在FGSM攻击的对抗训练过程中增加ALP正则化项，发现这样训练的模型对FGSM敌人和PGD敌人的鲁棒泛化能力都得到了提高\cite{kannan2018adversarial}，随后却被人发现通过简单的增加PGD攻击的迭代次数便可将PGD鲁棒精度降为0.6\%\cite{engstrom2018evaluating}，这篇文章因此从NIPS 2018撤稿。本文将在MNIST、SVHN等数据集上对ALP的有效性进行验证，并画出PGD鲁棒精度随迭代次数增多而下降的收敛曲线，以保证结论的准确性，详见章节\ref{section:convergence}。
+
+\section{ADTA}
+
+把对抗样本和干净样本看成两个不同的域，结合域适应的思想，ATDA提出用最大均值散度（Maximum Mean Discrepancy, MMD）\cite{borgwardt2006integrating}和相关性匹配（CORrelation ALignment, CORAL）\cite{sun2016deep}作为正则化项提高对抗训练的泛化能力\cite{song2018improving}。这和对比损失中点到点的拉近目标是有所区别的，MMD和CORAL是一种集合到集合的拉近。
+
+MMD的目标是最小化干净样本和对抗样本的均值向量间的距离：
+\begin{equation}
+    L_{mmd} 
+    = 
+    \frac{1}{k} \Big\| \frac{1}{|\mathcal{D}|} \sum_{x\in\mathcal{D}}F(x_i) - \frac{1}{|\mathcal{A}|} \sum_{x^{adv}\in\mathcal{A}}F(x_i^{adv}) \Big\|_1 
+    .
+\end{equation}
+
+CORAL的目标是最小化干净样本和对抗样本间的协方差矩阵间的距离：
+\begin{equation}
+    L_{coral} 
+    = 
+    \frac{1}{k^2} \Big\| C_{\varphi(\mathcal{D})} -  C_{\varphi(\mathcal{A})} \Big\|_{\ell_1} 
+    ,
+\end{equation}
+其中$C_{\varphi(\mathcal{D})}$和$C_{\varphi(\mathcal{A})}$分别是干净样本和对抗样本在逻辑空间（Logit sapce）上的协方差矩阵，$\| \cdot \|_{\ell_1}$表示矩阵的$L_1$范数。
+
+\section{AMR}
+
+流形正则化（Manifold Regularization, MR）在早期被提出，主要是希望通过这种方式去利用大量的未标记样本，来提高分类或回归任务的性能。它的主要思想是利用数据集的几何性状去对模型空间产生约束。该正则化项可以被估计为\cite{belkin2006manifold}：
+\begin{equation}
+    L_{mr}
+    = 
+    \frac{1}{|\mathcal{D}|^2} \sum_{x_i, x_j \in \mathcal{D}} w_{ij}\big\|\varphi(x_i) - \varphi(x_j)\big\|_2^2
+    \ ,
+\end{equation}
+其中$w_{ij}$定义为：
+\begin{equation}
+    w_{ij} = \left\{
+    \begin{array}{rl}
+    \exp \left(\frac{-\left\|x_i-x_j\right\|_2^2}{t}\right)  & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{k} \ ,\\
+    0  & \quad otherwise \ .
+    \end{array} \right.
+\end{equation}
+其中温度参数$t \in \mathbb{R}$，$\mathcal{P}_{k}$表示集合$\mathcal{D}$中所有样本间的k近邻构成的样本对集合。该正则化项的直觉是：在原空间中非常接近的样本对，经过变换后，尽量在隐空间中也相近；在原空间不那么靠近的样本对，在隐空间中的紧密度也就不那么重要了（体现在$w_{ij}$的相对大小中）。
+
+本文将流形正则化适应到对抗训练的环境中，提出对抗流形正则化（Adversarial Manifold Regularization, AMR），其主要思想是在原空间中非常接近的干净样本和对抗样本（k近邻），在隐空间中也应该尽量靠近。AMR可以被形式化为：
+\begin{equation}
+\begin{aligned}
+    L_{amr}
+    = \ &
+    \frac{1}{|\mathcal{D}| \cdot |\mathcal{A}|} \sum_{x_i^{cln} \in \mathcal{D}} \sum_{x_j^{adv} \in \mathcal{A}} w_{ij}^{(1)} \big\|\varphi(x_i^{cln}) - \varphi(x_j^{adv})\big\|_2^2 \\
+    + & 
+    \frac{1}{|\mathcal{D}| \cdot |\mathcal{A}|} \sum_{x_i^{adv} \in \mathcal{A}} \sum_{x_j^{cln} \in \mathcal{D}} w_{ij}^{(2)} \big\|\varphi(x_i^{adv}) - \varphi(x_j^{cln})\big\|_2^2
+    \ ,
+\end{aligned}
+\end{equation}
+其中$w_{ij}^{(l)}(l\in\{1, 2\})$定义为：
+\begin{equation}
+    w_{ij}^{(l)} = \left\{
+    \begin{array}{rl}
+    \exp \left(\frac{-\left\|\varPhi(x_i)-\varPhi(x_j)\right\|_2^2}{t}\right)  & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{k}^{(l)} \ ,\\
+    0  & \quad otherwise \ .
+    \end{array} \right.
+\end{equation}
+其中温度参数$t \in \mathbb{R}$，$\mathcal{P}_{k}^{(1)}$表示集合$\mathcal{D}$中所有样本在集合$\mathcal{A}$中的k近邻构成的样本对集合，$\mathcal{P}_{k}^{(2)}$表示集合$\mathcal{A}$中所有样本在集合$\mathcal{D}$中的k近邻构成的样本对集合。$\varPhi(\cdot)$是一个特征提取器（自编码器、自然训练的分类器或对抗训练的分类器），之所以使用一个特征提取器来计算k近邻的距离，是因为在高维的图像数据中欧式距离已失效。

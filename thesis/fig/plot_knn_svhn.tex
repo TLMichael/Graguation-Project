@@ -1,0 +1,28 @@
+%\documentclass{ctexart}
+%\usepackage{pgfplots}
+%\pgfplotsset{compat=1.16}
+%\begin{document}
+\begin{tikzpicture}
+    \pgfplotstableread[
+      % col sep=comma
+    ]{data/plot_knn_svhn.csv}{\Data}
+    \begin{axis}[
+      width=.60\textwidth,
+      xlabel={k近邻的取值},
+      ylabel={正确率},
+      xmin=1, xmax=10, xtick distance=1,
+      ymin=0, ymax=1,
+      ymajorgrids=true,
+      grid style=dashed,
+      legend pos=south east,
+    ]
+      \addplot+[smooth] table[x=knn, y=Clean] {\Data};
+      \addlegendentry{Clean};
+      \addplot+[smooth][mark=o] table[x=knn, y=FGSM] {\Data};
+      \addlegendentry{FGSM};
+      \addplot+[smooth][mark=x] table[x=knn, y=PGD] {\Data};
+      \addlegendentry{PGD};
+    \end{axis}
+  \end{tikzpicture}
+  %\end{document}
+  

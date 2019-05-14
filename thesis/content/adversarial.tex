@@ -1,0 +1,59 @@
+\chapter{对抗训练的泛化能力}
+
+本文专注于对基于深度学习的模型的攻击和防御，我们假设对手仅仅能够在模型的测试阶段实施攻击，对手只能在模型训练之后篡改模型的输入数据。已训练的模型和训练集数据均不可被篡改，但对手拥有已训练的模型的所有知识（模型架构和参数），这是符合目前大部分在线机器学习服务系统现状的假设。本节先介绍与本文相关的几个攻击方法，再讨论对抗训练的泛化能力。
+
+\section{记号}
+
+记干净样本集合为$\mathcal{D}$，对抗样本集合为$\mathcal{A}$。我们有一个基于神经网络的分类器$f(x) : \mathbb{R}^d \to \mathbb{R}^k$，对每一个输入$x \in [0, 1]^d$，$f(x)$输出对应的概率分布，$k$表示分类任务的类别总数。令$\varphi$表示从输入层到逻辑层（在最后一个softmax函数之前的一层）的映射，于是$f(x) = softmax(\varphi(x))$。记$\epsilon$为扰动的幅度，记$x^{adv}$为对抗样本，它是由原始样本$x$受到扰动而得到的。图片分类的损失函数记为$J(x, y)$。
+
+\section{攻击方法}
+
+本小节介绍三种攻击方法：快速梯度符号方法(Fast Gradient Sign Method, FGSM)\cite{goodfellow2014explaining}、投影梯度下降（Projected Gradient Descent, PGD）\cite{madry2018towards}、Carlini和Wagner的攻击（C\&W's Attack）\cite{carlini2017towards}。
+
+\subsection{FGSM}
+
+Goodfellow等人介绍了用FGSM生成对抗样本，通过在梯度的方向上添加扰动。
+\begin{equation}
+    x^{a d v}=x+\epsilon \cdot \operatorname{sign}\left(\nabla_{x} J\left(x, y_{t r u e}\right)\right)
+\end{equation}
+与其它方法比起来，FGSM是一个简单、快速且有效的敌人，因此FGSM非常适合用于对抗训练。
+
+\subsection{PGD}
+
+PGD是Madry等人介绍的一种攻击方式，是FGSM的迭代变种。此方法迭代地执行$k$次FGSM，每次的步长为$\alpha$。
+\begin{equation}
+    \begin{aligned}
+        x^{a d v_{0}} & =x \\
+        x^{a d v_{t+1}} & =x^{a d v_{t}}+\alpha \cdot \operatorname{sign}\left(\nabla_{x} J\left(x^{a d v_{t}}, y_{t r u e}\right)\right. \\
+        x^{a d v_{t+1}} & =\operatorname{\textbf{clip}}\left(x^{a d v_{t+1}}, x^{a d v_{t+1}}-\epsilon, x^{a d v_{t+1}}+\epsilon\right) \\ 
+        x^{a d v} & =x^{a d v_{k}}
+    \end{aligned}
+\end{equation}
+这里$\textbf{clip}(\cdot, a, b)$函数的功能是将它的输入裁剪到$[a, b]$范围内。在白盒攻击下，PGD通常拥有比FGSM更高的攻击成功率。
+
+\subsection{C\&W's Attack}
+
+C\&W's Attack是Carlini和Wagner提出用来攻击防御性蒸馏（Defensive distillation）\cite{papernot2016distillation}的一种强大的攻击方法。对抗扰动$\delta$通过以下的优化过程得到：
+\begin{equation}
+    \begin{aligned}
+        {\min_{\boldsymbol{\delta} \in \mathbb{R}^{n}}} \quad & {\|\boldsymbol{\delta}\|_{p}+c \cdot f(\mathbf{x}+\boldsymbol{\delta})} \\
+        {\text { s.t. }} \quad & {\mathbf{x}+\boldsymbol{\delta} \in[0,1]^{n}}
+    \end{aligned}
+\end{equation}
+其中$c>0$是一个合适的常数，$\ell_{2}$、$\ell_{0}$ 和 $\ell_{\infty}$范数都可以考虑。
+
+\section{对抗训练}
+
+在本文研究的分类任务中，我们将模型的泛化能力细分为两种：
+\begin{enumerate}
+    \item 标准泛化能力（Standard generalization），即表示为模型在标准的测试集（不含对抗样本）上的分类准确率。
+    \item 鲁棒泛化能力（Robust generalization），即表示为模型在对抗的测试集（不含干净样本）上的分类准确率。
+\end{enumerate}
+
+防御深度模型的一个非常直觉的方式是对抗训练，它在模型训练过程中向训练集里注入对抗样本。Goodfellow等人首次提出向模型同时送入原始样本和用FGSM生成的对抗样本以增加鲁棒性\cite{goodfellow2014explaining}，目标函数为：
+\begin{equation}
+    \hat{J}\left(x, y_{t r u e}\right)=\alpha J\left(x, y_{t r u e}\right)+(1-\alpha) J\left(x+\epsilon \operatorname{sign}\left(\nabla_{x} J\left(x, y_{t r u e}\right), y_{t r u e}\right)\right.
+\end{equation}
+Kurakin等人在ImageNet上实现了对抗训练，发现了标签泄露（Label leaking）效应，并建议在对抗训练过程中不要使用基于真实标签$y_{true}$的FGSM方法，而应该使用基于最大可能标签的FGSM方法\cite{kurakin2017adversarial}，本文的所有实验中对抗训练过程便采用了避免标签泄露的FGSM方法。其它的一些方法在对抗训练过程中使用PGD方法或更加复杂的优化方法产生最坏情况的对抗样本，然而这样的方式时间复杂度过高，导致推广到更大规模的神经网络上非常困难\cite{madry2018towards, pmlr-v80-wong18a}。
+
+以上所有的对抗训练方法都会存在鲁棒泛化能力不佳的问题。本文考虑的是在对抗训练过程中用最简单的FGSM方法产生对抗样本，但使用额外的正则化项以提高鲁棒泛化能力，这样的好处是不需要在生成对抗样本的优化过程花费太多时间，更容易拓展到更大规模的数据集和模型上。

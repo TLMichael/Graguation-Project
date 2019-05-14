@@ -1,0 +1,581 @@
+\begin{thebibliography}{10}
+
+\bibitem{krizhevsky2012imagenet}
+Krizhevsky A, Sutskever I, Hinton G~E.
+\newblock Imagenet classification with deep convolutional neural networks[C].
+\newblock Proceedings of Advances in neural information processing systems,
+  2012.
+\newblock  1097--1105.
+
+\bibitem{redmon2016you}
+Redmon J, Divvala S, Girshick R, et~al.
+\newblock You only look once: Unified, real-time object detection[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2016.
+\newblock  779--788.
+
+\bibitem{saon2015ibm}
+Saon G, Kuo H~K~J, Rennie S, et~al.
+\newblock The IBM 2015 English conversational telephone speech recognition
+  system[J].
+\newblock arXiv preprint, 2015. arXiv:1505.05899.
+
+\bibitem{sutskever2014sequence}
+Sutskever I, Vinyals O, Le Q~V.
+\newblock Sequence to sequence learning with neural networks[C].
+\newblock Proceedings of Advances in neural information processing systems,
+  2014.
+\newblock  3104--3112.
+
+\bibitem{thomax2017semisupervised}
+Kipf T~N, Welling M.
+\newblock Semi-Supervised Classification with Graph Convolutional Networks[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2017.
+
+\bibitem{saxe2015deep}
+Saxe J, Berlin K.
+\newblock Deep neural network based malware detection using two dimensional
+  binary program features[C].
+\newblock Proceedings of 2015 10th International Conference on Malicious and
+  Unwanted Software (MALWARE). IEEE, 2015.
+\newblock  11--20.
+
+\bibitem{goodfellow2014explaining}
+Goodfellow I~J, Shlens J, Szegedy C.
+\newblock Explaining and harnessing adversarial examples[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2015.
+
+\bibitem{szegedy2013intriguing}
+Szegedy C, Zaremba W, Sutskever I, et~al.
+\newblock Intriguing properties of neural networks[J].
+\newblock arXiv preprint, 2013. arXiv:1312.6199.
+
+\bibitem{kurakin2016adversarial}
+Kurakin A, Goodfellow I, Bengio S.
+\newblock Adversarial examples in the physical world[J].
+\newblock arXiv preprint, 2016. arXiv:1607.02533.
+
+\bibitem{Eykholt_2018_CVPR}
+Eykholt K, Evtimov I, Fernandes E, et~al.
+\newblock Robust Physical-World Attacks on Deep Learning Visual
+  Classification[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR), 2018.
+
+\bibitem{xie2017adversarial}
+Xie C, Wang J, Zhang Z, et~al.
+\newblock Adversarial examples for semantic segmentation and object
+  detection[C].
+\newblock Proceedings of the IEEE International Conference on Computer Vision,
+  2017.
+\newblock  1369--1378.
+
+\bibitem{carlini2016hidden}
+Carlini N, Mishra P, Vaidya T, et~al.
+\newblock Hidden voice commands[C].
+\newblock Proceedings of 25th $\{$USENIX$\}$ Security Symposium ($\{$USENIX$\}$
+  Security 16), 2016.
+\newblock  513--530.
+
+\bibitem{zhang2017dolphinattack}
+Zhang G, Yan C, Ji X, et~al.
+\newblock Dolphinattack: Inaudible voice commands[C].
+\newblock Proceedings of the 2017 ACM SIGSAC Conference on Computer and
+  Communications Security. ACM, 2017.
+\newblock  103--117.
+
+\bibitem{szegedy2015going}
+Szegedy C, Liu W, Jia Y, et~al.
+\newblock Going deeper with convolutions[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2015.
+\newblock  1--9.
+
+\bibitem{gu2014towards}
+Gu S, Rigazio L.
+\newblock Towards deep neural network architectures robust to adversarial
+  examples[J].
+\newblock arXiv preprint, 2014. arXiv:1412.5068.
+
+\bibitem{madry2018towards}
+Madry A, Makelov A, Schmidt L, et~al.
+\newblock Towards Deep Learning Models Resistant to Adversarial Attacks[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{papernot2016distillation}
+Papernot N, McDaniel P, Wu X, et~al.
+\newblock Distillation as a defense to adversarial perturbations against deep
+  neural networks[C].
+\newblock Proceedings of 2016 IEEE Symposium on Security and Privacy (SP).
+  IEEE, 2016.
+\newblock  582--597.
+
+\bibitem{rozsa2016adversarial}
+Rozsa A, Rudd E~M, Boult T~E.
+\newblock Adversarial diversity and hard positive generation[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition Workshops, 2016.
+\newblock  25--32.
+
+\bibitem{zheng2016improving}
+Zheng S, Song Y, Leung T, et~al.
+\newblock Improving the robustness of deep neural networks via stability
+  training[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition, 2016.
+\newblock  4480--4488.
+
+\bibitem{carlini2017towards}
+Carlini N, Wagner D.
+\newblock Towards evaluating the robustness of neural networks[C].
+\newblock Proceedings of 2017 IEEE Symposium on Security and Privacy (SP).
+  IEEE, 2017.
+\newblock  39--57.
+
+\bibitem{raghunathan2018certified}
+Raghunathan A, Steinhardt J, Liang P.
+\newblock Certified Defenses against Adversarial Examples[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{pmlr-v80-wong18a}
+Wong E, Kolter Z.
+\newblock Provable Defenses against Adversarial Examples via the Convex Outer
+  Adversarial Polytope[C].
+\newblock In: Dy J, Krause A, (eds.). Proceedings of the 35th International
+  Conference on Machine Learning, volume~80 of {\em Proceedings of Machine
+  Learning Research}, Stockholmsmässan, Stockholm Sweden: PMLR, 2018.
+\newblock  5286--5295.
+
+\bibitem{wong2018scaling}
+Wong E, Schmidt F, Metzen J~H, et~al.
+\newblock Scaling provable adversarial defenses[C].
+\newblock Proceedings of Advances in Neural Information Processing Systems,
+  2018.
+\newblock  8400--8409.
+
+\bibitem{grosse2017statistical}
+Grosse K, Manoharan P, Papernot N, et~al.
+\newblock On the (statistical) detection of adversarial examples[J].
+\newblock arXiv preprint, 2017. arXiv:1702.06280.
+
+\bibitem{gong2017adversarial}
+Gong Z, Wang W, Ku W~S.
+\newblock Adversarial and clean data are not twins[J].
+\newblock arXiv preprint, 2017. arXiv:1704.04960.
+
+\bibitem{metzen2017detecting}
+Metzen J~H, Genewein T, Fischer V, et~al.
+\newblock On detecting adversarial perturbations[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2017.
+
+\bibitem{li2017adversarial}
+Li X, Li F.
+\newblock Adversarial examples detection in deep networks with convolutional
+  filter statistics[C].
+\newblock Proceedings of the IEEE International Conference on Computer Vision,
+  2017.
+\newblock  5764--5772.
+
+\bibitem{feinman2017detecting}
+Feinman R, Curtin R~R, Shintre S, et~al.
+\newblock Detecting adversarial samples from artifacts[J].
+\newblock arXiv preprint, 2017. arXiv:1703.00410.
+
+\bibitem{carlini2017adversarial}
+Carlini N, Wagner D.
+\newblock Adversarial examples are not easily detected: Bypassing ten detection
+  methods[C].
+\newblock Proceedings of the 10th ACM Workshop on Artificial Intelligence and
+  Security. ACM, 2017.
+\newblock  3--14.
+
+\bibitem{schmidt2018adversarially}
+Schmidt L, Santurkar S, Tsipras D, et~al.
+\newblock Adversarially robust generalization requires more data[C].
+\newblock Proceedings of Advances in Neural Information Processing Systems,
+  2018.
+\newblock  5014--5026.
+
+\bibitem{hinton2006reducing}
+Hinton G~E, Salakhutdinov R~R.
+\newblock Reducing the dimensionality of data with neural networks[J].
+\newblock science, 2006, 313(5786):504--507.
+
+\bibitem{hubel1962receptive}
+Hubel D~H, Wiesel T~N.
+\newblock Receptive fields, binocular interaction and functional architecture
+  in the cat's visual cortex[J].
+\newblock The Journal of physiology, 1962, 160(1):106--154.
+
+\bibitem{lecun1989backpropagation}
+LeCun Y, Boser B, Denker J~S, et~al.
+\newblock Backpropagation applied to handwritten zip code recognition[J].
+\newblock Neural computation, 1989, 1(4):541--551.
+
+\bibitem{simonyan2014very}
+Simonyan K, Zisserman A.
+\newblock Very deep convolutional networks for large-scale image
+  recognition[J].
+\newblock arXiv preprint, 2014. arXiv:1409.1556.
+
+\bibitem{he2016deep}
+He K, Zhang X, Ren S, et~al.
+\newblock Deep residual learning for image recognition[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2016.
+\newblock  770--778.
+
+\bibitem{hu2018squeeze}
+Hu J, Shen L, Sun G.
+\newblock Squeeze-and-excitation networks[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2018.
+\newblock  7132--7141.
+
+\bibitem{woo2018cbam}
+Woo S, Park J, Lee J~Y, et~al.
+\newblock Cbam: Convolutional block attention module[C].
+\newblock Proceedings of the European Conference on Computer Vision (ECCV),
+  2018.
+\newblock  3--19.
+
+\bibitem{girshick2014rich}
+Girshick R, Donahue J, Darrell T, et~al.
+\newblock Rich feature hierarchies for accurate object detection and semantic
+  segmentation[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2014.
+\newblock  580--587.
+
+\bibitem{girshick2015fast}
+Girshick R.
+\newblock Fast r-cnn[C].
+\newblock Proceedings of the IEEE international conference on computer vision,
+  2015.
+\newblock  1440--1448.
+
+\bibitem{ren2015faster}
+Ren S, He K, Girshick R, et~al.
+\newblock Faster r-cnn: Towards real-time object detection with region proposal
+  networks[C].
+\newblock Proceedings of Advances in neural information processing systems,
+  2015.
+\newblock  91--99.
+
+\bibitem{liu2016ssd}
+Liu W, Anguelov D, Erhan D, et~al.
+\newblock Ssd: Single shot multibox detector[C].
+\newblock Proceedings of European conference on computer vision. Springer,
+  2016.
+\newblock  21--37.
+
+\bibitem{redmon2017yolo9000}
+Redmon J, Farhadi A.
+\newblock YOLO9000: better, faster, stronger[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2017.
+\newblock  7263--7271.
+
+\bibitem{redmon2018yolov3}
+Redmon J, Farhadi A.
+\newblock Yolov3: An incremental improvement[J].
+\newblock arXiv preprint, 2018. arXiv:1804.02767.
+
+\bibitem{lin2017feature}
+Lin T~Y, Doll{\'a}r P, Girshick R, et~al.
+\newblock Feature pyramid networks for object detection[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition, 2017.
+\newblock  2117--2125.
+
+\bibitem{chopra2005learning}
+Chopra S, Hadsell R, LeCun Y, et~al.
+\newblock Learning a similarity metric discriminatively, with application to
+  face verification[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition, 2005.
+\newblock  539--546.
+
+\bibitem{hadsell2006dimensionality}
+Hadsell R, Chopra S, LeCun Y.
+\newblock Dimensionality reduction by learning an invariant mapping[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition, volume~2. IEEE, 2006.
+\newblock  1735--1742.
+
+\bibitem{weinberger2009distance}
+Weinberger K~Q, Saul L~K.
+\newblock Distance metric learning for large margin nearest neighbor
+  classification[J].
+\newblock Journal of Machine Learning Research, 2009, 10(Feb):207--244.
+
+\bibitem{chechik2010large}
+Chechik G, Sharma V, Shalit U, et~al.
+\newblock Large scale online learning of image similarity through ranking[J].
+\newblock Journal of Machine Learning Research, 2010, 11(Mar):1109--1135.
+
+\bibitem{tsang2003distance}
+Tsang I~W, Kwok J~T, Bay C, et~al.
+\newblock Distance metric learning with kernels[C].
+\newblock Proceedings of the International Conference on Artificial Neural
+  Networks. Citeseer, 2003.
+\newblock  126--129.
+
+\bibitem{yeung2007kernel}
+Yeung D~Y, Chang H.
+\newblock A kernel approach for semisupervised metric learning[J].
+\newblock IEEE Transactions on Neural Networks, 2007, 18(1):141--149.
+
+\bibitem{hu2014discriminative}
+Hu J, Lu J, Tan Y~P.
+\newblock Discriminative deep metric learning for face verification in the
+  wild[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2014.
+\newblock  1875--1882.
+
+\bibitem{hoffer2015deep}
+Hoffer E, Ailon N.
+\newblock Deep metric learning using triplet network[C].
+\newblock Proceedings of International Workshop on Similarity-Based Pattern
+  Recognition. Springer, 2015.
+\newblock  84--92.
+
+\bibitem{oh2016deep}
+Oh~Song H, Xiang Y, Jegelka S, et~al.
+\newblock Deep metric learning via lifted structured feature embedding[C].
+\newblock Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition, 2016.
+\newblock  4004--4012.
+
+\bibitem{sohn2016improved}
+Sohn K.
+\newblock Improved deep metric learning with multi-class n-pair loss
+  objective[C].
+\newblock Proceedings of Advances in Neural Information Processing Systems,
+  2016.
+\newblock  1857--1865.
+
+\bibitem{dalvi2004adversarial}
+Dalvi N, Domingos P, Sanghai S, et~al.
+\newblock Adversarial classification[C].
+\newblock Proceedings of the tenth ACM SIGKDD international conference on
+  Knowledge discovery and data mining. ACM, 2004.
+\newblock  99--108.
+
+\bibitem{biggio2010multiple}
+Biggio B, Fumera G, Roli F.
+\newblock Multiple classifier systems for robust classifier design in
+  adversarial environments[J].
+\newblock International Journal of Machine Learning and Cybernetics, 2010,
+  1(1-4):27--41.
+
+\bibitem{biggio2013evasion}
+Biggio B, Corona I, Maiorca D, et~al.
+\newblock Evasion attacks against machine learning at test time[C].
+\newblock Proceedings of Joint European conference on machine learning and
+  knowledge discovery in databases. Springer, 2013.
+\newblock  387--402.
+
+\bibitem{roli2013pattern}
+Roli F, Biggio B, Fumera G.
+\newblock Pattern recognition systems under attack[C].
+\newblock Proceedings of Iberoamerican Congress on Pattern Recognition.
+  Springer, 2013.
+\newblock  1--8.
+
+\bibitem{moosavi2016deepfool}
+Moosavi-Dezfooli S~M, Fawzi A, Frossard P.
+\newblock Deepfool: a simple and accurate method to fool deep neural
+  networks[C].
+\newblock Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2016.
+\newblock  2574--2582.
+
+\bibitem{chen2017zoo}
+Chen P~Y, Zhang H, Sharma Y, et~al.
+\newblock Zoo: Zeroth order optimization based black-box attacks to deep neural
+  networks without training substitute models[C].
+\newblock Proceedings of the 10th ACM Workshop on Artificial Intelligence and
+  Security. ACM, 2017.
+\newblock  15--26.
+
+\bibitem{su2019one}
+Su J, Vargas D~V, Sakurai K.
+\newblock One pixel attack for fooling deep neural networks[J].
+\newblock IEEE Transactions on Evolutionary Computation, 2019..
+
+\bibitem{sharif2016accessorize}
+Sharif M, Bhagavatula S, Bauer L, et~al.
+\newblock Accessorize to a crime: Real and stealthy attacks on state-of-the-art
+  face recognition[C].
+\newblock Proceedings of the 2016 ACM SIGSAC Conference on Computer and
+  Communications Security. ACM, 2016.
+\newblock  1528--1540.
+
+\bibitem{tecent2019tesla}
+Lab T~K~S.
+\newblock Experimental Security Research of Tesla Autopilot[R].
+\newblock Technical report, 2019.
+\newblock
+  {\url{https://keenlab.tencent.com/en/whitepapers/Experimental_Security_Research_of_Tesla_Autopilot.pdf}}.
+
+\bibitem{jia2017adversarial}
+Jia R, Liang P.
+\newblock Adversarial examples for evaluating reading comprehension systems[C].
+\newblock Proceedings of the Conference on Empirical Methods in Natural
+  Language Processing (EMNLP), 2017.
+
+\bibitem{qin2019imperceptible}
+Qin Y, Carlini N, Goodfellow I, et~al.
+\newblock Imperceptible, Robust, and Targeted Adversarial Examples for
+  Automatic Speech Recognition[C].
+\newblock Proceedings of the 36th International Conference on Machine Learning,
+  2019.
+
+\bibitem{lu2017safetynet}
+Lu J, Issaranon T, Forsyth D.
+\newblock Safetynet: Detecting and rejecting adversarial examples robustly[C].
+\newblock Proceedings of the IEEE International Conference on Computer Vision,
+  2017.
+\newblock  446--454.
+
+\bibitem{Salimans2017pixelcnn}
+Salimans T, Karpathy A, Chen X, et~al.
+\newblock PixelCNN++: Improving the PixelCNN with Discretized Logistic Mixture
+  Likelihood and Other Modifications[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2017.
+
+\bibitem{song2017pixeldefend}
+Song Y, Kim T, Nowozin S, et~al.
+\newblock Pixeldefend: Leveraging generative models to understand and defend
+  against adversarial examples[J].
+\newblock arXiv preprint arXiv:1710.10766, 2017..
+
+\bibitem{carlini2017magnet}
+Carlini N, Wagner D.
+\newblock Magnet and" efficient defenses against adversarial attacks" are not
+  robust to adversarial examples[J].
+\newblock arXiv preprint arXiv:1711.08478, 2017..
+
+\bibitem{buckman2018thermometer}
+Buckman J, Roy A, Raffel C, et~al.
+\newblock Thermometer Encoding: One Hot Way To Resist Adversarial Examples[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{guo2018countering}
+Guo C, Rana M, Cisse M, et~al.
+\newblock Countering Adversarial Images using Input Transformations[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{s.2018stochastic}
+Dhillon G~S, Azizzadenesheli K, Bernstein J~D, et~al.
+\newblock Stochastic activation pruning for robust adversarial defense[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{xie2018mitigating}
+Xie C, Wang J, Zhang Z, et~al.
+\newblock Mitigating Adversarial Effects Through Randomization[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{song2018pixeldefend}
+Song Y, Kim T, Nowozin S, et~al.
+\newblock PixelDefend: Leveraging Generative Models to Understand and Defend
+  against Adversarial Examples[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{samangouei2018defensegan}
+Samangouei P, Kabkab M, Chellappa R.
+\newblock Defense-{GAN}: Protecting Classifiers Against Adversarial Attacks
+  Using Generative Models[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2018.
+
+\bibitem{pmlr-v80-athalye18a}
+Athalye A, Carlini N, Wagner D.
+\newblock Obfuscated Gradients Give a False Sense of Security: Circumventing
+  Defenses to Adversarial Examples[C].
+\newblock In: Dy J, Krause A, (eds.). Proceedings of Proceedings of the 35th
+  International Conference on Machine Learning, volume~80 of {\em Proceedings
+  of Machine Learning Research}, Stockholmsmässan, Stockholm Sweden: PMLR,
+  2018.
+\newblock  274--283.
+
+\bibitem{kurakin2017adversarial}
+Kurakin A, Goodfellow I, Bengio S.
+\newblock Adversarial machine learning at scale[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2017.
+
+\bibitem{kannan2018adversarial}
+Kannan H, Kurakin A, Goodfellow I.
+\newblock Adversarial logit pairing[J].
+\newblock arXiv preprint arXiv:1803.06373, 2018..
+
+\bibitem{engstrom2018evaluating}
+Engstrom L, Ilyas A, Athalye A.
+\newblock Evaluating and understanding the robustness of adversarial logit
+  pairing[J].
+\newblock arXiv preprint arXiv:1807.10272, 2018..
+
+\bibitem{song2018improving}
+Song C, He K, Wang L, et~al.
+\newblock Improving the Generalization of Adversarial Training with Domain
+  Adaptation[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2019.
+
+\bibitem{farnia2018generalizable}
+Farnia F, Zhang J, Tse D.
+\newblock Generalizable Adversarial Training via Spectral Normalization[C].
+\newblock Proceedings of International Conference on Learning Representations,
+  2019.
+
+\bibitem{borgwardt2006integrating}
+Borgwardt K~M, Gretton A, Rasch M~J, et~al.
+\newblock Integrating structured biological data by kernel maximum mean
+  discrepancy[J].
+\newblock Bioinformatics, 2006, 22(14):e49--e57.
+
+\bibitem{sun2016deep}
+Sun B, Saenko K.
+\newblock Deep coral: Correlation alignment for deep domain adaptation[C].
+\newblock Proceedings of European Conference on Computer Vision. Springer,
+  2016.
+\newblock  443--450.
+
+\bibitem{belkin2006manifold}
+Belkin M, Niyogi P, Sindhwani V.
+\newblock Manifold regularization: A geometric framework for learning from
+  labeled and unlabeled examples[J].
+\newblock Journal of machine learning research, 2006, 7(Nov):2399--2434.
+
+\bibitem{lecun1998mnist}
+LeCun Y.
+\newblock The MNIST database of handwritten digits[J].
+\newblock http://yann. lecun. com/exdb/mnist/, 1998..
+
+\bibitem{netzer2011reading}
+Netzer Y, Wang T, Coates A, et~al.
+\newblock Reading digits in natural images with unsupervised feature
+  learning[C].
+\newblock Proceedings of NIPS Workshop on Deep Learning and Unsupervised
+  Feature Learning, 2011.
+
+\bibitem{krizhevsky2009learning}
+Krizhevsky A, Hinton G.
+\newblock Learning multiple layers of features from tiny images[R].
+\newblock Technical report, Citeseer, 2009.
+
+\end{thebibliography}
