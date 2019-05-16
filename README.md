@@ -1,2 +1,3 @@
 # Graguation-Project
-Improving the generalization robust of adversarial training, Graduation Project, NUAA.
+Improving the robust generalization of adversarial training. Graduation Project, NUAA.
+
