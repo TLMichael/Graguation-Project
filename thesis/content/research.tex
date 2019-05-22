@@ -4,7 +4,7 @@
 
 \section{深度学习}
 
-2006年，多伦多大学教授Geoffrey Hinton及其学生Rusian发表在世界顶级学术期刊《科学》上的一篇论文引发了深度学习在研究领域和应用领域的发展热潮\cite{hinton2006reducing}。这篇文献提出了两个主要观点：（1）、多层人工神经网络有很强的特征学习能力，深度学习模型学习得到的特征数据对原数据有更本质的代表性，这将大大便于分类和可视化问题；（2）、对于深度神经网络难以训练的问题，可以采用逐层训练的方法解决。
+2006年，多伦多大学教授Hinton等人发表在《Science》上的一篇论文引发了深度学习在学术界和工业界的发展热潮\cite{hinton2006reducing}。这篇文献抛出了两个结论：（1）、深度神经网络具备优异的特征表示能力，深度模型学习到的特征比原始数据维度更低，且不失判别性，非常有利于分类等任务；（2）、一层一层训练的方式可以有效地训练一个深度模型。
 
 深度学习发展到今天，已经在许多领域大放异彩，例如：计算机视觉、自然语言处理、医学影像分析、语音、游戏、图网络、时间序列、机器人控制、计算机编程等。本节主要介绍深度学习在图像分类（Image classification）和目标检测(Object detection)上的进展。
 
@@ -23,9 +23,9 @@
 
 \subsection{目标检测}
 
-自从AlexNet获得ILSVRC 2012挑战赛冠军后，用CNN进行分类成为主流。2014年，Girshick等人提出R-CNN\cite{girshick2014rich}，利用候选区域方法（Region proposal method）创建目标检测感兴趣的区域（Resion of Interest, ROI），再送入CNN进行分类，此方法每预测一张图片需要49秒。2015年，Ross Girshick提出Fast R-CNN\cite{girshick2015fast}，利用特征图代替原图生成ROI，显著地减少处理时间至每张图片2.3秒。2016年，Ren等人提出Faster R-CNN\cite{ren2015faster},使用内部的候选区域网络代替了外部的候选区域方法，使得ROI的生成效率进一步提高，每张图片的处理时间减小到0.2秒。
+自从AlexNet获得ILSVRC 2012挑战赛冠军后，用CNN进行特征提取便流行起来。2014年，Girshick等人提出R-CNN\cite{girshick2014rich}，利用候选区域方法（Region proposal method）生成检测感兴趣的区域（Resion of Interest, ROI），再送入CNN进行分类，此方法每预测一张图片需要49秒。2015年，Ross Girshick提出Fast R-CNN\cite{girshick2015fast}，利用特征图代替原图生成ROI，显著地减少处理时间至每张图片2.3秒。2016年，Ren等人提出Faster R-CNN\cite{ren2015faster},使用可微的候选区域网络代替了不可微分的候选区域方法，使得ROI的生成效率进一步提高，每张图片的处理时间减小到0.2秒。
 
-以上的目标检测器由于候选区提取和分类是分开做的，被称为二次检测器（Two-stage detector），与之对应的是随后提出的单次检测器（One-stage detector）。Liu等人提出的SSD模型\cite{liu2016ssd}和Redmon等人提出的YOLO模型\cite{redmon2016you, redmon2017yolo9000, redmon2018yolov3}将候选区提取和分类用端到端（End-to-end）的方式融合到一起训练，使得目标检测器真正达到了实时检测的程度，但对小目标的检测效果较差。Lin等人提出特征金字塔网络（Feature Pyramid Network, FPN）\cite{lin2017feature}，利用多尺度特征图提高准确率。
+以上的目标检测器由于候选区提取和分类是分开做的，被称为二阶段检测器（Two-stage detector），另一种更直接的方式被称为一阶段检测器（One-stage detector）。Liu等人提出的SSD模型\cite{liu2016ssd}和Redmon等人提出的YOLO模型\cite{redmon2016you, redmon2017yolo9000, redmon2018yolov3}将候选区提取和分类用端到端（End-to-end）的方式融合到一起训练，使得目标检测器真正达到了实时检测的程度，但对小目标的检测效果较差。Lin等人提出特征金字塔网络（Feature Pyramid Network, FPN）\cite{lin2017feature}，利用多尺度特征图提高准确率。
 
 \section{度量学习}
 

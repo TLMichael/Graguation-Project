@@ -1,0 +1,159 @@
+\chapter{对抗训练及其正则化方法}
+
+本文专注于对基于深度学习的模型的攻击和防御，我们假设对手仅仅能够在模型的测试阶段实施攻击，对手只能在模型训练之后篡改模型的输入数据。已训练的模型和训练集数据均不可被篡改，但对手拥有已训练的模型的所有知识（模型架构和参数），这是符合目前大部分在线机器学习服务系统现状的假设。本节先介绍与对抗训练相关的几个攻击方法，再讨论对抗训练的泛化能力，最后介绍并提出相关的正则化方法。
+
+\section{攻击方法}
+
+本小节介绍三种攻击方法：快速梯度符号方法(Fast Gradient Sign Method, FGSM)\cite{goodfellow2014explaining}、投影梯度下降（Projected Gradient Descent, PGD）\cite{madry2018towards}、Carlini和Wagner的攻击（C\&W's Attack）\cite{carlini2017towards}。
+
+记干净样本集合为$\mathcal{D}$，对抗样本集合为$\mathcal{A}$。我们有一个基于神经网络的分类器$f(x) : \mathbb{R}^d \to \mathbb{R}^k$，对每一个输入$x \in [0, 1]^d$，$f(x)$输出对应的概率分布，$k$表示分类任务的类别总数。令$\varphi$表示从输入层到逻辑层（在最后一个softmax函数之前的一层）的映射，于是$f(x) = softmax(\varphi(x))$。记$\epsilon$为扰动的幅度，记$x^{adv}$为对抗样本，它是由原始样本$x$受到扰动而得到的。图片分类的损失函数记为$J(x, y)$。
+
+\subsection{FGSM}
+
+Goodfellow等人介绍了用FGSM生成对抗样本，通过在梯度的方向上添加扰动。
+\begin{equation}
+    x^{a d v}=x+\epsilon \cdot \operatorname{sign}\left(\nabla_{x} J\left(x, y_{t r u e}\right)\right)
+\end{equation}
+与其它方法比起来，FGSM是一个简单、快速且有效的敌人，因此FGSM非常适合用于对抗训练。
+
+\subsection{PGD}
+
+PGD是Madry等人介绍的一种攻击方式，是FGSM的迭代变种。此方法迭代地执行$k$次FGSM，每次的步长为$\alpha$。
+\begin{equation}
+    \begin{aligned}
+        x^{a d v_{0}} & =x \\
+        x^{a d v_{t+1}} & =x^{a d v_{t}}+\alpha \cdot \operatorname{sign}\left(\nabla_{x} J\left(x^{a d v_{t}}, y_{t r u e}\right)\right. \\
+        x^{a d v_{t+1}} & =\operatorname{\textbf{clip}}\left(x^{a d v_{t+1}}, x^{a d v_{t+1}}-\epsilon, x^{a d v_{t+1}}+\epsilon\right) \\ 
+        x^{a d v} & =x^{a d v_{k}}
+    \end{aligned}
+\end{equation}
+这里$\textbf{clip}(\cdot, a, b)$函数的功能是将它的输入裁剪到$[a, b]$范围内。在白盒攻击下，PGD通常拥有比FGSM更高的攻击成功率。
+
+\subsection{C\&W's Attack}
+
+C\&W's Attack是Carlini和Wagner提出用来攻击防御性蒸馏（Defensive distillation）\cite{papernot2016distillation}的一种强大的攻击方法。对抗扰动$\delta$通过以下的优化过程得到：
+\begin{equation}
+    \begin{aligned}
+        {\min_{\boldsymbol{\delta} \in \mathbb{R}^{n}}} \quad & {\|\boldsymbol{\delta}\|_{p}+c \cdot f(\mathbf{x}+\boldsymbol{\delta})} \\
+        {\text { s.t. }} \quad & {\mathbf{x}+\boldsymbol{\delta} \in[0,1]^{n}}
+    \end{aligned}
+\end{equation}
+其中$c>0$是一个合适的常数，$\ell_{2}$、$\ell_{0}$ 和 $\ell_{\infty}$范数都可以考虑。
+
+\section{对抗训练}
+
+在本文研究的分类任务中，我们将模型的泛化能力细分为两种：
+\begin{enumerate}
+    \item 标准泛化能力（Standard generalization），即表示为模型在标准的测试集（不含对抗样本）上的分类准确率。
+    \item 鲁棒泛化能力（Robust generalization），即表示为模型在对抗的测试集（不含干净样本）上的分类准确率。
+\end{enumerate}
+
+防御深度模型的一个非常直觉的方式是对抗训练，它在模型训练过程中向训练集里注入对抗样本。Goodfellow等人首次提出向模型同时送入原始样本和用FGSM生成的对抗样本以增加鲁棒性\cite{goodfellow2014explaining}，目标函数为：
+\begin{equation}
+    \hat{J}\left(x, y_{t r u e}\right)=\alpha J\left(x, y_{t r u e}\right)+(1-\alpha) J\left(x+\epsilon \operatorname{sign}\left(\nabla_{x} J\left(x, y_{t r u e}\right), y_{t r u e}\right)\right.
+\end{equation}
+Kurakin等人在ImageNet上实现了对抗训练，发现了标签泄露（Label leaking）效应，并建议在对抗训练过程中不要使用基于真实标签$y_{true}$的FGSM方法，而应该使用基于最大可能标签的FGSM方法\cite{kurakin2017adversarial}，本文的所有实验中对抗训练过程便采用了避免标签泄露的FGSM方法。其它的一些方法在对抗训练过程中使用PGD方法或更加复杂的优化方法产生最坏情况的对抗样本，然而这样的方式时间复杂度过高，导致推广到更大规模的神经网络上非常困难\cite{madry2018towards, pmlr-v80-wong18a}。
+
+以上所有的对抗训练方法都会存在鲁棒泛化能力不佳的问题。本文考虑的是在对抗训练过程中用最简单的FGSM方法产生对抗样本，但使用额外的正则化项以提高鲁棒泛化能力，这样的好处是不需要在生成对抗样本的优化过程花费太多时间，更容易拓展到更大规模的数据集和模型上。
+
+\section{对抗训练中的正则化方法}
+
+深度学习中对抗样本的存在性是一个反直觉的特性，一个被普遍接受的解释是：对抗样本是模型的内在的盲点区域，这个盲区的结构与数据分布紧密相关，以一种不那么明显的方式\cite{szegedy2013intriguing}。这种不明显体现在，对抗样本和干净样本在我们人类看来区别并没有那么地明显，甚至不可察觉，但事实上，对于模型来说，这种不明显的区别是致命的。这种致命体现在，两个在原始特征空间中非常邻近的样本点，经过深度网络一系列非线性变换后，两个样本点在隐空间中的距离竟然会变得很远，以至于最终落在了模型的两个不同的判决区域。
+
+一个直觉的方案是在隐空间中尽量拉近对抗样本与干净样本的距离，期望使得模型不再将两个样本点（对抗样本和原始样本）判为不同类别。这个思想就是度量学习中的对比损失，学习一个良好的深度网络，使得在隐空间中对抗样本和干净样本之间的距离尽量小。
+
+对比损失可以形式化为：
+\begin{equation}
+    L
+    = 
+    \frac{1}{(|\mathcal{D}| + |\mathcal{A}|)^2} \sum_{x_i, x_j \in \mathcal{D} \cup \mathcal{A}} w_{ij}\big\|\varphi(x_i) - \varphi(x_j)\big\|_2^2
+    \ ,
+    \label{contrastive_loss}
+\end{equation}
+其中$w_{ij}$定义为：
+\begin{equation}
+    w_{ij} = \left\{
+    \begin{array}{rl}
+    1  & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{sim} \ ,\\
+    -1 & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{dis} \ ,\\
+    0  & \quad otherwise \ .
+    \end{array} \right.
+    \label{metric_weight}
+\end{equation}
+其中$\mathcal{P}_{sim}$表示相似样本对集合，$\mathcal{P}_{dis}$表示不相似样本对集合。这里的式\eqref{contrastive_loss}在度量学习中只是一个最基本的形式，本文这样写是为了阐明本文思路，对比损失的其它变体形式在这里不予赘述。
+
+为了将对比损失的思想作为一个正则化项，合适地融入对抗训练的损失中，下面介绍三种构造方式：对抗逻辑配对（Adversarial Logit Pairing, ALP）\cite{kannan2018adversarial}、结合域适应的对抗训练（Adversarial Training with Domain Adaption, ATDA）\cite{song2018improving}、对抗流形正则化（Adversarial Manifold Regularization, AMR）。
+
+\subsection{ALP} \label{section:alp}
+
+ALP可以定义为：
+\begin{equation}
+    L_{alp}
+    = 
+    \frac{1}{|\mathcal{D}|} \sum_{x_i \in \mathcal{D}} \big\|\varphi(x_i) - \varphi(x_i^{adv})\big\|_2^2 \ ,
+    \label{alp}
+\end{equation}
+其中$x_i^{adv}$是$x_i$对应的使用FGSM攻击方法生成的对抗样本。式\eqref{alp}旨在缩小每个样本点和它对应的对抗样本点间的欧式距离，即在式\eqref{metric_weight}中，$\mathcal{P}_{sim} = \{(x_i, x_i^{adv}) | x_i \in \mathcal{D} \}$，$\mathcal{P}_{dis} = \varnothing$。
+
+Kannan等人在提出ALP的文章中，他们仅仅在ImageNet上进行了有效性验证，在FGSM攻击的对抗训练过程中增加ALP正则化项，发现这样训练的模型对FGSM敌人和PGD敌人的鲁棒泛化能力都得到了提高\cite{kannan2018adversarial}，随后却被人发现通过简单的增加PGD攻击的迭代次数便可将PGD鲁棒精度降为0.6\%\cite{engstrom2018evaluating}，这篇文章因此从NIPS 2018撤稿。本文将在MNIST、SVHN等数据集上对ALP的有效性进行验证，并画出PGD鲁棒精度随迭代次数增多而下降的收敛曲线，以保证结论的准确性，详见章节\ref{section:convergence}。
+
+\subsection{ADTA}
+
+把对抗样本和干净样本看成两个不同的域，结合域适应的思想，ATDA提出用最大均值散度（Maximum Mean Discrepancy, MMD）\cite{borgwardt2006integrating}和相关性匹配（CORrelation ALignment, CORAL）\cite{sun2016deep}作为正则化项提高对抗训练的泛化能力\cite{song2018improving}。这和对比损失中点到点的拉近目标是有所区别的，MMD和CORAL是一种集合到集合的拉近。
+
+MMD的目标是最小化干净样本和对抗样本的均值向量间的距离：
+\begin{equation}
+    L_{mmd} 
+    = 
+    \frac{1}{k} \Big\| \frac{1}{|\mathcal{D}|} \sum_{x\in\mathcal{D}}F(x_i) - \frac{1}{|\mathcal{A}|} \sum_{x^{adv}\in\mathcal{A}}F(x_i^{adv}) \Big\|_1 
+    .
+\end{equation}
+
+CORAL的目标是最小化干净样本和对抗样本间的协方差矩阵间的距离：
+\begin{equation}
+    L_{coral} 
+    = 
+    \frac{1}{k^2} \Big\| C_{\varphi(\mathcal{D})} -  C_{\varphi(\mathcal{A})} \Big\|_{\ell_1} 
+    ,
+\end{equation}
+其中$C_{\varphi(\mathcal{D})}$和$C_{\varphi(\mathcal{A})}$分别是干净样本和对抗样本在逻辑空间（Logit sapce）上的协方差矩阵，$\| \cdot \|_{\ell_1}$表示矩阵的$L_1$范数。
+
+\subsection{AMR}
+
+流形正则化（Manifold Regularization, MR）在早期被提出，主要是希望通过这种方式去利用大量的未标记样本，来提高分类或回归任务的性能。它的主要思想是利用数据集的几何性状去对模型空间产生约束。该正则化项可以被估计为\cite{belkin2006manifold}：
+\begin{equation}
+    L_{mr}
+    = 
+    \frac{1}{|\mathcal{D}|^2} \sum_{x_i, x_j \in \mathcal{D}} w_{ij}\big\|\varphi(x_i) - \varphi(x_j)\big\|_2^2
+    \ ,
+\end{equation}
+其中$w_{ij}$定义为：
+\begin{equation}
+    w_{ij} = \left\{
+    \begin{array}{rl}
+    \exp \left(\frac{-\left\|x_i-x_j\right\|_2^2}{t}\right)  & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{k} \ ,\\
+    0  & \quad otherwise \ .
+    \end{array} \right.
+\end{equation}
+其中温度参数$t \in \mathbb{R}$，$\mathcal{P}_{k}$表示集合$\mathcal{D}$中所有样本间的k近邻构成的样本对集合。该正则化项的直觉是：在原空间中非常接近的样本对，经过变换后，尽量在隐空间中也相近；在原空间不那么靠近的样本对，在隐空间中的紧密度也就不那么重要了（体现在$w_{ij}$的相对大小中）。
+
+本文将流形正则化适应到对抗训练的环境中，提出对抗流形正则化（Adversarial Manifold Regularization, AMR），其主要思想是在原空间中非常接近的干净样本和对抗样本（k近邻），在隐空间中也应该尽量靠近。AMR可以被形式化为：
+\begin{equation}
+\begin{aligned}
+    L_{amr}
+    = \ &
+    \frac{1}{|\mathcal{D}| \cdot |\mathcal{A}|} \sum_{x_i^{cln} \in \mathcal{D}} \sum_{x_j^{adv} \in \mathcal{A}} w_{ij}^{(1)} \big\|\varphi(x_i^{cln}) - \varphi(x_j^{adv})\big\|_2^2 \\
+    + & 
+    \frac{1}{|\mathcal{D}| \cdot |\mathcal{A}|} \sum_{x_i^{adv} \in \mathcal{A}} \sum_{x_j^{cln} \in \mathcal{D}} w_{ij}^{(2)} \big\|\varphi(x_i^{adv}) - \varphi(x_j^{cln})\big\|_2^2
+    \ ,
+\end{aligned}
+\end{equation}
+其中$w_{ij}^{(l)}(l\in\{1, 2\})$定义为：
+\begin{equation}
+    w_{ij}^{(l)} = \left\{
+    \begin{array}{rl}
+    \exp \left(\frac{-\left\|\varPhi(x_i)-\varPhi(x_j)\right\|_2^2}{t}\right)  & \quad \textnormal{if } (x_i, x_j) \in \mathcal{P}_{k}^{(l)} \ ,\\
+    0  & \quad otherwise \ .
+    \end{array} \right.
+\end{equation}
+其中温度参数$t \in \mathbb{R}$，$\mathcal{P}_{k}^{(1)}$表示集合$\mathcal{D}$中所有样本在集合$\mathcal{A}$中的k近邻构成的样本对集合，$\mathcal{P}_{k}^{(2)}$表示集合$\mathcal{A}$中所有样本在集合$\mathcal{D}$中的k近邻构成的样本对集合。$\varPhi(\cdot)$是一个特征提取器（自编码器、自然训练的分类器或对抗训练的分类器），之所以使用一个特征提取器来计算k近邻的距离，是因为在高维的图像数据中欧式距离已失效。

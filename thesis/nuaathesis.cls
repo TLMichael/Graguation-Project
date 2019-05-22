@@ -823,12 +823,15 @@
   \end{flushright}
 
   \begin{center}
+    　% 一个全角空格，解决pdf复制乱码问题
     \linespread{1}\kaishu\fontsize{22bp}{30bp}\selectfont
     \nuaa@textbf{\nuaa@university}
     \vspace{\stretch{3}}
 
     \linespread{1}\songti\fontsize{55bp}{55bp}\selectfont
-    \nuaa@textbf{\nuaa@worktypecn}
+    % \nuaa@textbf{\nuaa@worktypecn}
+    \ 
+    \includegraphics{bold-paper.pdf}
     \vspace{\stretch{5}}
   \end{center}
 
